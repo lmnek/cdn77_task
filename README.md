@@ -43,7 +43,7 @@ Here is an example of cached resources path on the system: `/var/cache/nginx/7/4
 
 All of the changes to enable the X-Cache-Key header are in [this commit](https://github.com/lmnek/nginx/commit/6359e114aa8a200d006a7b0e5595e2b8455f771c) 🚨.
 
-To try it out, just pull the repo, compile it and run. No further configuration should be necessary. The header will be automatically added to all responses.
+To try it out, just pull the repo, compile and run it. No further configuration should be necessary. The header will be automatically added to all responses.
 
 NGINX response compared with the cache directory:
 ![cache-key-demo.png](https://raw.githubusercontent.com/lmnek/cdn77_task/refs/heads/main/cache-key-demo.png)
