@@ -3,13 +3,13 @@
 
 Assigments: [C/Lua task](https://docs.google.com/document/d/1tNfj7IRdg51rtea-4_QhueqDQEAXjAelJLgbElUfcP0/edit?tab=t.0),  [GO / DNS](https://docs.google.com/document/d/1_bJg-zJyoDaY-xHnl1ZBxXwmQ30SwTvngdpMVofDG-E/edit?tab=t.0#heading=h.lg5ipse8t11a)
 
-For the recruitment task, I selected the combo of C/Lua task and DNS task. My primary motivation was that I was aware of the importance of nginx in CDN 77's stack. As I didn't have much experience with it before, I wanted to give it a proper look, understand it on a deeper level and get some hands-on experience. I assume that this knowledge would probably always be valuable in the real day-to-day job at CDN. Another reason was that all of the tasks seemed pretty straightforward, and I could easily imagine how I would proceed in each one of them.
+For the recruitment task, I selected the combo of C/Lua task and DNS task. My primary motivation was that I was aware of the importance of NGINX in CDN77's stack. As I didn't have much experience with it before, I wanted to give it a proper look, understand it on a deeper level and get some hands-on experience. I assume that this knowledge would probably always be valuable in the real day-to-day job at CDN. Another reason was that all of the tasks seemed pretty straightforward, and I could easily imagine how I would proceed in each one of them.
 
 In the next part, I will just present the solution in the most direct way. Afterwards in the log, I will try to describe how I worked on each part in further detail, and shed a light on my thinking process.
 
 # Solutions
 
-## nginx
+## NGINX
 
 ### Caching explained
 The cache key is an unique identifier that NGINX assigns to each cacheable resource.
@@ -110,7 +110,7 @@ Disclaimer: LC-Tries are not necessarily more space efficient than normal Radix 
 
 ### Code
 
-The prototype implementations are in the files `main.rs` and `lc_trie.rs`.
+The prototype implementations are in the files [main.rs](https://github.com/lmnek/cdn77_task/blob/main/dns_task/src/main.rs) and [lc_trie.rs](https://github.com/lmnek/cdn77_task/blob/main/dns_task/src/lc_trie.rs).
 
 # Log
 
@@ -118,11 +118,11 @@ I generally work in a way where I spend considerable amount of time researching 
 
 ## nginx
 
-Researching for the first part definitely took me the most time, as I used nginx only once in my life and very briefly. I've spent around 3 days getting familiar with nginx in various ways -  reading docs, blogs, understanding the architecture, looking at different usecases, config structure and directives, and especially exploring the codebase.
+Researching for the first part definitely took me the most time, as I used NGINX only once in my life and very briefly. I've spent around 3 days getting familiar with nginx in various ways - reading docs, blogs, understanding the architecture, looking at different usecases, config structure and directives, and especially exploring the codebase.
 
-I then jumped onto compiling nginx from source and running it to see if everything would work correctly on my system. I followed the instructions step by step and everything seemed very clear. The only problem I stumbled upon was permission issues with some directories, which I fixed after playing with the users/groups on my system. If I installed nginx again next time, I would probably try to run inside of docker, so I don't pollute my system as much. 
+I then jumped onto compiling nginx from source and running it to see if everything would work correctly on my system. I followed the instructions step by step and everything seemed very clear. The only problem I stumbled upon was permission issues with some directories, which I fixed after playing with the users/groups on my system. If I installed NGINX again next time, I would probably try to run inside of Docker, so I don't pollute my system as much. 
 
-It was pretty easy to identify necessary function in the code and understand how the cache key is computed. I just skimmed through the codebase, looked at documentation for different modules, and searched for some key words with grep. After realizing how it works, just to be sure I didn't make any error, I double checked by computing the md5 hash manually and compared it with file name in the cache directory.
+It was pretty easy to identify necessary function in the code and understand how the cache key is computed. I just skimmed through the codebase, looked at documentation for different modules, and searched for some key words with Grep. After realizing how it works, just to be sure I didn't make any error, I double checked by computing the md5 hash manually and compared it with file name in the cache directory.
 
 The implementation of *X-Cache-Key* header was in the end also simple and straight-forward, although I had some difficulties figuring out what are the correct functions and data types to use in the context of the codebase. In many iterations I also managed to write a code that crashed the server, for example because of issues with handling pointers and sizes of arrays (also of-by-one errors 💀). Most of the day I spent searching for these issues and selecting appropriate data types/functions to put in my code. This led me to gain better intution on nginx internals, and I had the opportunity to play with logs and also do basic debugging. After I got the functionality working, I extracted the code into a separate function, cleaned it up a bit, and did some minor optimalizations (e.g. replaced redundant static local array with smarter handling of dynamically allocated array). I tried to follow the coding style and conventions of the codebase to the best of my abilities.
 
@@ -136,7 +136,7 @@ In contrast the following tasks were smooth sailing. For the DNS wildcard matchi
 
 ## DNS
 
-I've described the decision process of LC-Trie pretty thoroughly in the solution, so I will not go through the thinking process again. Just for the sake of complete🚨, during my research I've also stumbled on other advanced techniques and data structures, that I did not choose to go with and that could also result in performant and scalable solutions, for example HAT Tries, structures utilizing parallel/distributed computing, adaptive radix trees and multiple Sufix tries.
+I've described the decision process of LC-Trie pretty thoroughly in the solution, so I will not go through the thinking process again. Just for the sake of completeness, during my research I've also stumbled on other advanced techniques and data structures, that I did not choose to go with and that could also result in performant and scalable solutions, for example HAT Tries, structures utilizing parallel/distributed computing, adaptive radix trees and multiple Sufix tries.
 
 Because I don't have any experience with Go, I chose to implement my solution in Rust. It can achieve the same ⚡blazingly fast⚡ performance as Go, and I find it convenient to quickly sketch out my ideas in it. Rust compiler and type system also help in uncovering some obvious bugs, that could go unnoticed in other languages. 
 
