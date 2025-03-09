@@ -46,7 +46,7 @@ All of the changes to enable the X-Cache-Key header are in [this commit](https:/
 To try it out, just pull the repo, compile it and run. No further configuration should be necessary. The header will be automatically added to all responses.
 
 NGINX response compared with the cache directory:
-![[cache-key-demo.png]]
+![cache-key-demo.png](https://raw.githubusercontent.com/lmnek/cdn77_task/refs/heads/main/cache-key-demo.png)
 
 ### Wildcard algorithm
 
